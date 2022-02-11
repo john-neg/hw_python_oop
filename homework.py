@@ -8,10 +8,10 @@ class InfoMessage:
                  calories: float
                  ) -> None:
         self.message = f"Тип тренировки: {training_type}; " \
-                       f"Длительность: {round(duration, 3)} ч.; " \
-                       f"Дистанция: {round(distance, 3)} км; Ср. " \
-                       f"скорость: {round(speed, 3)} км/ч; " \
-                       f"Потрачено ккал: {round(calories, 3)}. "
+                       f"Длительность: {'%.3f' % duration} ч.; " \
+                       f"Дистанция: {'%.3f' % distance} км; Ср. " \
+                       f"скорость: {'%.3f' % speed} км/ч; " \
+                       f"Потрачено ккал: {'%.3f' % calories}."
 
     def get_message(self) -> str:
         return self.message
@@ -21,6 +21,7 @@ class Training:
     """Базовый класс тренировки."""
     LEN_STEP = 0.65
     M_IN_KM = 1000
+    MIN_IN_HOUR = 60
 
     def __init__(self,
                  action: int,
@@ -36,7 +37,7 @@ class Training:
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
-        distance = self.action * self.LEN_STEP / Training.M_IN_KM
+        distance = self.action * self.LEN_STEP / self.M_IN_KM
         return distance
 
     def get_mean_speed(self) -> float:
@@ -65,7 +66,7 @@ class Running(Training):
         coeff_calorie_1 = 18
         coeff_calorie_2 = 20
         calories = (coeff_calorie_1 * self.speed - coeff_calorie_2) \
-            * self.weight / self.M_IN_KM * self.duration
+            * self.weight / self.M_IN_KM * self.duration * self.MIN_IN_HOUR
         return calories
 
 
@@ -86,9 +87,9 @@ class SportsWalking(Training):
         coeff_calorie_2 = 0.029
         calories = (coeff_calorie_1 * self.weight
                     + (self.speed ** 2 // self.height)
-                    * coeff_calorie_2 * self.weight) * self.duration
+                    * coeff_calorie_2 * self.weight) \
+                    * self.duration * self.MIN_IN_HOUR
         return calories
-
 
 class Swimming(Training):
     """Тренировка: плавание."""
@@ -98,7 +99,7 @@ class Swimming(Training):
                  action: int,
                  duration: float,
                  weight: float,
-                 length_pool: float,
+                 length_pool: int,
                  count_pool: int) -> None:
         self.length_pool = length_pool
         self.count_pool = count_pool
@@ -130,7 +131,7 @@ def read_package(workout_type: str, data: list) -> Training:
 def main(training: Training) -> None:
     """Главная функция."""
     info = training.show_training_info()
-    print(info.get_message)
+    print(info.get_message())
 
 
 if __name__ == '__main__':
