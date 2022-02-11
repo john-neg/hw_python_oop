@@ -47,7 +47,8 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        pass
+        calories = 0
+        return calories
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -88,8 +89,9 @@ class SportsWalking(Training):
         calories = (coeff_calorie_1 * self.weight
                     + (self.speed ** 2 // self.height)
                     * coeff_calorie_2 * self.weight) \
-                    * self.duration * self.MIN_IN_HOUR
+            * self.duration * self.MIN_IN_HOUR
         return calories
+
 
 class Swimming(Training):
     """Тренировка: плавание."""
