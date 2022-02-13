@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import List, ClassVar
 
 
-@dataclass(init=True, repr=False, eq=False, match_args=False)
+@dataclass(init=True, repr=False, eq=False)
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str
@@ -20,7 +20,7 @@ class InfoMessage:
         return message
 
 
-@dataclass(init=True, repr=False, eq=False, match_args=False)
+@dataclass(init=True, repr=False, eq=False)
 class Training:
     """Базовый класс тренировки."""
     action: int
@@ -55,7 +55,7 @@ class Training:
         return info
 
 
-@dataclass(init=True, repr=False, eq=False, match_args=False)
+@dataclass(init=True, repr=False, eq=False)
 class Running(Training):
     """Тренировка: бег."""
     RUNNING_COEFF_1: ClassVar[int] = 18
@@ -68,7 +68,7 @@ class Running(Training):
         return calories
 
 
-@dataclass(init=True, repr=False, eq=False, match_args=False)
+@dataclass(init=True, repr=False, eq=False)
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     height: float
@@ -85,7 +85,7 @@ class SportsWalking(Training):
         return calories
 
 
-@dataclass(init=True, repr=False, eq=False, match_args=False)
+@dataclass(init=True, repr=False, eq=False)
 class Swimming(Training):
     """Тренировка: плавание."""
     length_pool: int
