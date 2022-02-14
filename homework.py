@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from typing import List, ClassVar
+from typing import List, ClassVar, Type, Dict
 
 
-@dataclass(init=True, repr=False, eq=False)
+@dataclass(repr=False, eq=False)
 class InfoMessage:
     """Информационное сообщение о тренировке."""
     training_type: str
@@ -20,15 +20,15 @@ class InfoMessage:
         return message
 
 
-@dataclass(init=True, repr=False, eq=False)
+@dataclass(repr=False, eq=False)
 class Training:
     """Базовый класс тренировки."""
     action: int
     duration: float
     weight: float
     LEN_STEP: ClassVar[float] = 0.65
-    M_IN_KM: ClassVar[int] = 1000
-    MIN_IN_HOUR: ClassVar[int] = 60
+    M_IN_KM: ClassVar[float] = 1000
+    MIN_IN_HOUR: ClassVar[float] = 60
 
     def get_distance(self) -> float:
         """Получить дистанцию в км."""
@@ -55,20 +55,20 @@ class Training:
         return info
 
 
-@dataclass(init=True, repr=False, eq=False)
+@dataclass(repr=False, eq=False)
 class Running(Training):
     """Тренировка: бег."""
-    RUNNING_COEFF_1: ClassVar[int] = 18
-    RUNNING_COEFF_2: ClassVar[int] = 20
+    RUNNING_COEFF_1: ClassVar[float] = 18
+    RUNNING_COEFF_2: ClassVar[float] = 20
 
     def get_spent_calories(self) -> float:
-        calories = ((self.RUNNING_COEFF_1 * self.get_mean_speed()
-                    - self.RUNNING_COEFF_2) * self.weight
-                    / self.M_IN_KM * self.duration * self.MIN_IN_HOUR)
+        calories: float = ((self.RUNNING_COEFF_1 * self.get_mean_speed()
+                           - self.RUNNING_COEFF_2) * self.weight
+                           / self.M_IN_KM * self.duration * self.MIN_IN_HOUR)
         return calories
 
 
-@dataclass(init=True, repr=False, eq=False)
+@dataclass(repr=False, eq=False)
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
     height: float
@@ -77,15 +77,14 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-
-        calories = ((self.WALKING_COEFF_1 * self.weight
-                    + (self.get_mean_speed() ** 2 // self.height)
-                    * self.WALKING_COEFF_2 * self.weight)
-                    * self.duration * self.MIN_IN_HOUR)
+        calories: float = ((self.WALKING_COEFF_1 * self.weight
+                           + (self.get_mean_speed() ** 2 // self.height)
+                           * self.WALKING_COEFF_2 * self.weight)
+                           * self.duration * self.MIN_IN_HOUR)
         return calories
 
 
-@dataclass(init=True, repr=False, eq=False)
+@dataclass(repr=False, eq=False)
 class Swimming(Training):
     """Тренировка: плавание."""
     length_pool: int
@@ -102,7 +101,6 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-
         calories: float = ((self.get_mean_speed() + self.SWIMMING_COEFF_1)
                            * self.SWIMMING_COEFF_2 * self.weight)
         return calories
@@ -110,15 +108,17 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: List[int]) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_types = {"SWM": Swimming,
-                      "RUN": Running,
-                      "WLK": SportsWalking}
+    training_types: Dict[str, Type[Training]] = {
+        "SWM": Swimming,
+        "RUN": Running,
+        "WLK": SportsWalking,
+    }
     return training_types.get(workout_type)(*data)
 
 
 def main(training: Training) -> None:
     """Главная функция."""
-    info = training.show_training_info()
+    info: InfoMessage = training.show_training_info()
     print(info.get_message())
 
 
